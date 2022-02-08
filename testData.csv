@@ -1,8 +1,8 @@
-"chart","value"
-2,14
-2,14
-2,17
-2,18
-2,4
-2,39
-2,21
+"chart","value","selected"
+2,14,false
+2,14,true
+2,17,false
+2,18,false
+2,4,true
+2,39,false
+2,21,false
