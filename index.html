@@ -13,6 +13,8 @@
   var width = 450
   height = 450
   margin = 40;
+  var done = false;
+  var chartNum = 0;
 
   // append the svg object to the body of the page
   var svg = d3.select("#my_dataviz")
@@ -24,14 +26,32 @@
 
   //data
   d3.csv("testData.csv", function (data) {
-    //Pie Chart --------------- [1] Color, [2] Greyscale
-    if(data[1].chart == 1 || data[1].chart == 2) {
-      pieChart(data);
-    };
+    while(done === false) {
+      //Pie Chart --------------- [1] Color, [2] Greyscale
+      if(chartNum == 1 || chartNum == 2) {
+        pieChart(data, i);
+      };
+
+      //Stacked Bar ------------- [3] Color, [4] Greyscale
+
+      //ask the user 
+
+      //increment chart 
+      chartNum ++;
+      
+      console.log("index: ",chartNum);
+      alert("INDEX", chartNum);
+      svg.attr("display", none);
+
+      if(chartNum === 7) {
+        done = true;
+      }
+    }
     
+
   });
 
-  function pieChart(data) {
+  function pieChart(data, chartNum) {
 
     //compute radius for pie chart
     var radius = Math.min(width, height) / 2 - margin;
@@ -47,7 +67,7 @@
     //calculate the arc of each entry
     var arcGenerator = d3.arc()
       .innerRadius(0)
-      .outerRadius(radius)
+      .outerRadius(radius);
 
     //format the data
     var data_ready = pieColor(d3.entries(data));
@@ -63,7 +83,7 @@
         .outerRadius(radius)
       )
       .attr('fill', function (d) {
-        if (d.data.value.chart == 1) {
+        if (chartNum == 1) {
           if (d.data.value.selected == "true") {
             return ("red");
           } else {
@@ -84,7 +104,7 @@
       .enter()
       .append('text')
       .text(function (d) {
-        if (d.data.value.selected == "true" && d.data.value.chart == 2) {
+        if (d.data.value.selected == "true" && chartNum == 2) {
           return ("*");
         };
       })
