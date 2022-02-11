@@ -1,8 +1,8 @@
-"chart","value","selected"
-2,14,false
-2,14,true
-2,17,false
-2,18,false
-2,4,true
-2,39,false
-2,21,false
+"chart","xval","value","selected"
+2,1,14,false
+2,2,14,true
+2,3,17,false
+2,4,18,false
+2,5,4,true
+2,6,39,false
+2,7,21,false

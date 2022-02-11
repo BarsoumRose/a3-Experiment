@@ -9,49 +9,118 @@
 
 <script>
   console.log(d3); // test if d3 is loaded
-  // set the dimensions and margins of the graph
-  var width = 450
-  height = 450
-  margin = 40;
-  var done = false;
-  var chartNum = 0;
 
-  // append the svg object to the body of the page
-  var svg = d3.select("#my_dataviz")
-    .append("svg")
-    .attr("width", width)
-    .attr("height", height)
-    .append("g")
-    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
   //data
   d3.csv("testData.csv", function (data) {
-    while(done === false) {
-      //Pie Chart --------------- [1] Color, [2] Greyscale
-      if(chartNum == 1 || chartNum == 2) {
-        pieChart(data, i);
-      };
+    //while (done === false) {
+    //Pie Chart --------------- [1] Color, [2] Greyscale
+    //if (chartNum == 1 || chartNum == 2) {
+    if (false) {
+      pieChart(data, 1);
+    };
 
-      //Stacked Bar ------------- [3] Color, [4] Greyscale
+    //Stacked Bar ------------- [3] Color, [4] Greyscale
 
-      //ask the user 
+    //Bar Chart --------------- [5] Color, [6] Greyscale
+    barChart(data,1);
 
-      //increment chart 
-      chartNum ++;
-      
-      console.log("index: ",chartNum);
-      alert("INDEX", chartNum);
-      svg.attr("display", none);
+    // ask the user 
 
-      if(chartNum === 7) {
-        done = true;
-      }
-    }
-    
+    // increment chart 
+    // chartNum++;
+
+    // console.log("index: ", chartNum);
+    // alert("INDEX", chartNum);
+    // svg.attr("display", none);
+
+    // if (chartNum === 7) {
+    //   done = true;
+    // }
+    //}
 
   });
 
+  function barChart(data,chartNum) {
+    var margin = { top: 30, right: 30, bottom: 70, left: 60 },
+      width = 460 - margin.left - margin.right,
+      height = 400 - margin.top - margin.bottom;
+
+    // append the svg object to the body of the page
+    var svg = d3.select("#my_dataviz")
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform",
+        "translate(" + margin.left + "," + margin.top + ")");
+
+    //console.log("doodoo");
+    // console.log(width);
+
+    var color = d3.scaleOrdinal()
+      .domain(data)
+      .range(["#fbb4ae", "#b3cde3", "#ccebc5", "#decbe4", "#fed9a6", "#ffffcc", "#e5d8bd", "#fddaec", "#f2f2f2"]);
+
+    // X axis
+    var x = d3.scaleBand()
+      .range([0, width / 2])
+      .domain(data.map(function (d) { return d.xval; }))
+      .padding(0.2);
+    svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x))
+      .selectAll("text")
+      .attr("transform", "translate(-10,0)rotate(-45)")
+      .style("text-anchor", "end");
+
+    // Add Y axis
+    var y = d3.scaleLinear()
+      .domain([0, 30])
+      .range([height, 0]);
+    svg.append("g")
+      .call(d3.axisLeft(y));
+
+    // Bars
+    svg.selectAll("mybar")
+      .data(data)
+      .enter()
+      .append("rect")
+      .attr("x", function (d) { return x(d.xval); })
+      .attr("y", function (d) { return y(d.value); })
+      .attr("width", x.bandwidth())
+      .attr("height", function (d) { return height - y(d.value); })
+      .attr("fill", function (d) {
+        console.log(chartNum);
+        if (chartNum == 1) {
+          if (d.selected == "true") {
+            
+            return ("red");
+          } else {
+            return (color(d.value));
+          };
+        } else {
+          return "#949494";
+        };
+      });
+  }
+
   function pieChart(data, chartNum) {
+
+    // set the dimensions and margins of the graph
+    var width = 600
+    height = 600
+    margin = 40;
+    var done = false;
+    var chartNum = 0;
+
+    // append the svg object to the body of the page
+    var svg = d3.select("#my_dataviz")
+      .append("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .append("g")
+      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
     //compute radius for pie chart
     var radius = Math.min(width, height) / 2 - margin;
@@ -96,7 +165,7 @@
       .attr("stroke", "black")
       .style("stroke-width", "2px")
       .style("opacity", 0.7);
-    
+
     //append text to svg
     svg
       .selectAll('#slices')
